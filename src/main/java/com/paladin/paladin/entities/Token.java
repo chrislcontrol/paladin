@@ -1,7 +1,9 @@
 package com.paladin.paladin.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,26 +16,25 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "CLIENT")
-public class Client implements Serializable {
+@Table(name = "TOKEN")
+public class Token implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)
     private UUID id;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "CREATED_AT", nullable = false, updatable = false)
     private Date createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at")
+    @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
+    @Column(name = "TOKEN", nullable = false)
+    private String token;
 
-    @Column(name = "USENAME", nullable = false, unique = true)
-    private String username;
-
-    @Column(name = "PASSWORD", nullable = false)
-    private String password;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CLIENT_ID", referencedColumnName = "id")
+    private Client client;
 }
-

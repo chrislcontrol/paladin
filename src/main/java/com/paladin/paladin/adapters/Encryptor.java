@@ -10,4 +10,8 @@ public class Encryptor {
     public String encrypt(String value) {
         return this.encoder.encode(value);
     }
+
+    public boolean matches(String rawPassword, String encodedPassword) {
+        return this.encoder.matches(rawPassword, encodedPassword);
+    }
 }
