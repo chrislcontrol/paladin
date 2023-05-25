@@ -14,4 +14,8 @@ public class Encryptor {
     public boolean matches(String rawPassword, String encodedPassword) {
         return this.encoder.matches(rawPassword, encodedPassword);
     }
+
+    public BCryptPasswordEncoder getEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

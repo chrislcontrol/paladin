@@ -2,7 +2,7 @@ package com.paladin.paladin.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public abstract class APIResponseError extends Exception {
+public abstract class APIResponseError extends RuntimeException {
     final public String message;
     final public String code;
     final public HttpStatus status;

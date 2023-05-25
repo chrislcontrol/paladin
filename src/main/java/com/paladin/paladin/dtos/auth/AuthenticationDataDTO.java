@@ -11,7 +11,7 @@ import lombok.Setter;
 public class AuthenticationDataDTO {
     @NotBlank
     @Size(max = 10)
-    private Client client;
+    private String username;
 
     @NotBlank
     @Size(max = 20)

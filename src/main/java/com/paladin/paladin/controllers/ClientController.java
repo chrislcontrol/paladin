@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 2900)
-@RequestMapping("clients")
+@RequestMapping("api/v1/clients")
 public class ClientController {
     final CreateClientUseCase createClientUseCase;
 

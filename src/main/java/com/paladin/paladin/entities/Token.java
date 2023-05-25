@@ -1,22 +1,25 @@
 package com.paladin.paladin.entities;
 
+import com.paladin.paladin.enums.TokenType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
 @ToString
-@Table(name = "TOKEN")
+@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor
+@Entity
 public class Token implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,10 +34,31 @@ public class Token implements Serializable {
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
-    @Column(name = "TOKEN", nullable = false)
-    private String token;
+    @Column(unique = true)
+    public String token;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CLIENT_ID", referencedColumnName = "id")
-    private Client client;
+    @Enumerated(EnumType.STRING)
+    public TokenType tokenType = TokenType.BEARER;
+
+    public boolean revoked;
+
+    public boolean expired;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    @ToString.Exclude
+    public Client client;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Token token = (Token) o;
+        return id != null && Objects.equals(id, token.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
