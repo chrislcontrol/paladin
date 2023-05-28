@@ -18,47 +18,4 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class AuthenticateUseCase {
-    private final TokenRepository tokenRepository;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-
-    public AuthenticationOutputDTO execute(Client client, String password) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                client.getUsername(),
-                password
-        );
-
-        this.authenticationManager.authenticate(authToken);
-        String jwtToken = this.jwtService.generateToken((UserDetails) client);
-        String refreshToken = this.jwtService.generateRefreshToken((UserDetails) client);
-        this.revokeAllUserTokens(client);
-        this.saveUserToken(client, jwtToken);
-        return AuthenticationOutputDTO.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
-
-    }
-
-    private void revokeAllUserTokens(Client client) {
-        List<Token> validUserTokens = this.tokenRepository.findAllValidTokenByClient(client.getId());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        this.tokenRepository.saveAll(validUserTokens);
-    }
-
-    private void saveUserToken(Client client, String jwtToken) {
-        Token token = Token.builder()
-                .client(client)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
-                .build();
-        this.tokenRepository.save(token);
-    }
 }
