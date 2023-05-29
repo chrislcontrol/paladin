@@ -3,7 +3,6 @@ package com.paladin.paladin.configs;
 import com.paladin.paladin.entities.Client;
 import com.paladin.paladin.exceptions.ClientNotFound;
 import com.paladin.paladin.repositories.ClientRepository;
-import com.paladin.paladin.repositories.TokenRepository;
 import com.paladin.paladin.use_cases.auth.ValidateTokenUseCase;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,7 +23,6 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     final UserDetailsService userDetailsService;
-    final TokenRepository tokenRepository;
     final ValidateTokenUseCase validateTokenUseCase;
     final ClientRepository clientRepository;
 
@@ -35,32 +33,35 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        try {
 
-            String headerToken = request.getHeader("Authorization");
-            if (headerToken == null) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+        String headerToken = request.getHeader("Authorization");
 
-            String token = headerToken.replace("Bearer ", "");
-            String username = this.validateTokenUseCase.execute(token);
-
-            Client client = this.clientRepository.findByUsername(username)
-                    .orElseThrow(() -> new ClientNotFound(null, null, null));
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    client,
-                    null,
-                    client.getAuthorities()
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        if (headerToken == null) {
             filterChain.doFilter(request, response);
-        } catch (Exception exception) {
-            filterChain.doFilter(request, response);
+            return;
         }
 
+        if (!headerToken.startsWith("Bearer")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = headerToken.replace("Bearer ", "");
+        String username = this.validateTokenUseCase.execute(token);
+
+        Client client = this.clientRepository.findByUsername(username)
+                .orElseThrow(() -> new ClientNotFound(null, null, null));
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                client,
+                null,
+                client.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        filterChain.doFilter(request, response);
     }
+
 }
+

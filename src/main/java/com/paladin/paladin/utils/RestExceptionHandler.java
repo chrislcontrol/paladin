@@ -1,7 +1,6 @@
 package com.paladin.paladin.utils;
 
 import com.paladin.paladin.exceptions.APIResponseError;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

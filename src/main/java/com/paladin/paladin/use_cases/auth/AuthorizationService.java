@@ -12,10 +12,10 @@ public class AuthorizationService {
     final String issuer;
 
     public AuthorizationService() {
-        this.secretKey = "xpto";
+        this.secretKey = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
         this.jwtExpiration = 30;
         this.algorithm = Algorithm.HMAC256(this.secretKey);
-        this.issuer = "vehicles";
+        this.issuer = "Vehicles";
     }
 
 }

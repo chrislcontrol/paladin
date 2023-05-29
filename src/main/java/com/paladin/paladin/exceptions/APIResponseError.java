@@ -26,7 +26,24 @@ public abstract class APIResponseError extends RuntimeException {
         this.status = (status == null) ? this.defaultStatus() : status;
         this.code = (code == null) ? this.defaultCode() : code;
     }
+
+    public APIResponseError(String message, HttpStatus status) {
+        super(message);
+        this.message = (message == null) ? this.defaultMessage() : message;
+        this.status = (status == null) ? this.defaultStatus() : status;
+        this.code = this.defaultCode();
+    }
+
+    public APIResponseError(String message) {
+        super(message);
+        this.message = (message == null) ? this.defaultMessage() : message;
+        this.status = this.defaultStatus();
+        this.code = this.defaultCode();
+    }
+
     abstract String defaultMessage();
+
     abstract String defaultCode();
+
     abstract HttpStatus defaultStatus();
 }

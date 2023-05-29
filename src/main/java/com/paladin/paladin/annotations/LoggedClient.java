@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @AuthenticationPrincipal
-public @interface LoggedUser {
+public @interface LoggedClient {
 }

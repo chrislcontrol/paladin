@@ -38,6 +38,10 @@ public class Client implements UserDetails {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @OneToMany(mappedBy = "client")
+    private List<Vehicle> vehicles;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));

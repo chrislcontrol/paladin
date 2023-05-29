@@ -31,4 +31,9 @@ public class Vehicle implements Serializable {
 
     @Column(name = "TAG")
     private String tag;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="CLIENT_ID")
+    private Client client;
+
 }

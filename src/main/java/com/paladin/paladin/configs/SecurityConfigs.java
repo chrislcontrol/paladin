@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -22,25 +23,13 @@ public class SecurityConfigs {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthFilter jwtAuthFilter;
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
-//        manager.createUser(User
-//                .withDefaultPasswordEncoder()
-//                .username("user")
-//                .password("password")
-//                .roles("USER")
-//                .build());
-//        return manager;
-//    }
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
                 .disable()
                 .httpBasic(withDefaults())
+                .formLogin(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
                                 HttpMethod.POST,
